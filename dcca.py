@@ -21,17 +21,17 @@ class Site(GenericSite):
 
     #.opinionC1/a[@href] ('http://www.dccourts.gov/' + opinionC1 (e.g., http://www.dccourts.gov/internet/documents/13-BG-955.pdf)
     def _get_download_urls(self):
-        path = 'td[@class="opinionC2"]/a/@href'
+        path = '//td[@class="opinionC1"]/a/@href'
         return [t for t in self.html.xpath(path)]
 
     #.opinionC2
     def _get_case_names(self):
-        path = 'td[@class="opinionC2"]//text()'
+        path = '//td[@class="opinionC2"]//text()'
         return [titlecase(t.upper()) for t in self.html.xpath(path)]
 
     #.opinionC3 (e.g., Nov 7, 2013)
     def _get_case_dates(self):
-        path = 'td[@class="opinionC3"]//text()'
+        path = '//td[@class="opinionC3"]//text()'
         return [date.fromtimestamp(time.mktime(time.strptime(date_string, '%b %d, %Y')))
                     for date_string in self.html.xpath(path)]
 
@@ -40,5 +40,9 @@ class Site(GenericSite):
 
     #.opinionC1 value (e.g., 13-BG-955)
     def _get_docket_numbers(self):
-        path = 'td[@class="opinionC1"]//text()'
+        path = '//td[@class="opinionC1"]//text()'
         return [t for t in self.html.xpath(path)]
+
+site = Site()
+site.parse()
+print str(site)
